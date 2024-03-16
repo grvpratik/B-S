@@ -1,5 +1,5 @@
 'use client'
-import React, { useState } from 'react'
+import React from 'react'
 
 
 import { z } from "zod";
@@ -23,7 +23,7 @@ import Editor from '@/components/editor/editor';
 const formSchema = z.object({
 	title: z.string().min(2).max(50),
 	slug: z.string().min(2).max(50),
-	bannerImage: z.string().min(2).max(50),
+	
     discription: z.string().min(2).max(250),
     content:z.string()
 });
@@ -34,27 +34,30 @@ const formSchema = z.object({
 
 const BlogDetails = () => {
 
-    const [title, setTitle] = useState("")
+  
     
     const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
             title: "",
             slug: "",
-            bannerImage: "",
+            
             discription: "",
             content:""
             
 		},
     });
-    console.log(title)
+   
       function onSubmit(values: z.infer<typeof formSchema>) {
 				// Do something with the form values.
 				// ✅ This will be type-safe and validated.
 				console.log(values);
 			}
   return (
-		<>
+	  <>
+		  <h1 className='container font-bold text-2xl py-4'>
+			  Create Post
+		  </h1>
 			<Form {...form}>
 				<form
 					onSubmit={form.handleSubmit(onSubmit)}
@@ -114,11 +117,9 @@ const BlogDetails = () => {
 							<FormItem>
 								<FormLabel>Content</FormLabel>
 								<FormControl>
-									<Textarea
-										placeholder="here goes the main content of the post"
-										{...field}
-									/>
-								
+									<Editor
+										value={field.value}
+										onChange={field.onChange} />
 								</FormControl>
 								<FormDescription>
 									this is the content of the post
@@ -127,7 +128,7 @@ const BlogDetails = () => {
 							</FormItem>
 						)}
 					/>
-				
+
 					<Button type="submit">Submit</Button>
 				</form>
 			</Form>
